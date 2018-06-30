@@ -18,7 +18,7 @@ func main() {
 	e := echo.New()
 
 	// curl -i localhost:8080/tasks
-	// curl -i -X PUT localhost:8080/tasks
+	// curl -H 'Content-Type: application/json' -X PUT -d '{"name":"Foobar"}' localhost:8080/tasks
 	// curl -i -X DELETE localhost:8080/tasks/1
 	e.File("/", "public/index.html")
 	e.Get("/tasks", handlers.GetTasks(db))
