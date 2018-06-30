@@ -26,20 +26,20 @@
         <div class="col-md-4">
             <h2>My Tasks</h2>
             <ul class="list-group">
-                <li class="list-group-item" v-for="task in tasks">
-                {{ task.name }}
+                <li class="list-group-item" v-for="dataNameOrCallMeTask in taskDataPassedToBody">
+                    {{ dataNameOrCallMeTask.name }}
                     <span class="pull-right">
-                                <button class="btn btn-xs btn-danger" v-on:click="deleteTask($index)">
-                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                </button>
-                            </span>
+                        <button class="btn btn-xs btn-danger" v-on:click="deleteTask($index)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </span>
                 </li>
             </ul>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="New Task" v-on:keyup.enter="createTask" v-model="newTask.name">
                 <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" v-on:click="createTask">Create</button>
-                        </span>
+                    <button class="btn btn-primary" type="button" v-on:click="createTask">Create</button>
+                </span>
             </div><!-- /input-group -->
         </div>
     </div>
@@ -47,45 +47,44 @@
 <script>
     new Vue({
         el: 'body',
-
         data: {
-            tasks: [],
+            taskDataPassedToBody:[],
             newTask: {}
         },
 
-        // This is run whenever the page is loaded to make sure we have a current task list
-        created: function() {
+        //This is run whenever the page is loaded to make sure we have a current task list
+        created: function () {
             // Use the vue-resource $http client to fetch data from the /tasks route
-            this.$http.get('/tasks').then(function(response) {
-                this.tasks = response.data.items ? response.data.items : []
+            this.$http.get('/tasks').then(function (response) {
+                this.taskDataPassedToBody = response.data.items ? response.data.items : []
             })
         },
 
         methods: {
-            createTask: function() {
+            createTask: function () {
                 if (!$.trim(this.newTask.name)) {
                     this.newTask = {}
                     return
                 }
 
-                // Post the new task to the /tasks route using the $http client
-                this.$http.put('/tasks', this.newTask).success(function(response) {
+                // Post the new task to the /task route using the $http client
+                this.$http.put('/tasks', this.newTask).success(function (response) {
                     this.newTask.id = response.created
-                    this.tasks.push(this.newTask)
+                    this.taskDataPassedToBody.push(this.newTask)
                     console.log("Task created!")
-                    console.log(this.newTask)
+                    console.log(this.newTask.id)
                     this.newTask = {}
-                }).error(function(error) {
+                }).error(function (error) {
                     console.log(error)
                 });
             },
 
             deleteTask: function(index) {
                 // Use the $http client to delete a task by its id
-                this.$http.delete('/tasks/' + this.tasks[index].id).success(function(response) {
-                    this.tasks.splice(index, 1)
+                this.$http.delete('/tasks/' + this.taskDataPassedToBody[index].id).success(function (response) {
+                    this.taskDataPassedToBody.splice(index, 1)
                     console.log("Task deleted!")
-                }).error(function(error) {
+                }).error(function (error) {
                     console.log(error)
                 })
             }
