@@ -9,6 +9,8 @@ import (
 	"github.com/ken5scal/go-vuejs/handlers"
 )
 
+// All the code is borrowed from https://scotch.io/tutorials/create-a-single-page-app-with-go-echo-and-vue
+// This code serves as my practice for building go-backend and vue-frontend.
 func main() {
 	db := initDB("storage.db")
 	migrate(db)
